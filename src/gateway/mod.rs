@@ -264,7 +264,7 @@ impl Gateway {
     }
 
     // Ore
-    pub async fn register_ore(&self) -> GatewayResult<()> {
+    pub async fn open_ore(&self) -> GatewayResult<()> {
         // Return early, if account is already initialized
         let signer = signer();
         let proof_address = proof_pubkey(signer.pubkey());
@@ -273,7 +273,7 @@ impl Gateway {
         }
 
         // Sign and send transaction.
-        let ix = ore::instruction::register(signer.pubkey());
+        let ix = ore::instruction::open(signer.pubkey());
         match self.send_and_confirm(&[ix], true, false).await {
             Ok(_) => Ok(()),
             Err(_) => Err(GatewayError::FailedRegister),
