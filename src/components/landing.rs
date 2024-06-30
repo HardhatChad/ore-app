@@ -328,7 +328,7 @@ fn SectionA(text_color: TextColor) -> Element {
         TextColor::White => "text-white",
     };
 
-    let mut sample_hash = use_signal(|| Blake3Hash::new_unique());
+    let mut sample_hash = use_signal(|| "".to_string());
 
     let hashrate = use_resource(move || async move {
         let size = 10u64;
@@ -346,7 +346,9 @@ fn SectionA(text_color: TextColor) -> Element {
     use_future(move || async move {
         loop {
             async_std::task::sleep(std::time::Duration::from_millis(125)).await;
-            sample_hash.set(Blake3Hash::new_unique());
+            let hash = Blake3Hash::new_unique();
+            let hash = hash.to_string()[1..17].to_string();
+            sample_hash.set(hash);
         }
     });
 
@@ -379,7 +381,7 @@ fn SectionA(text_color: TextColor) -> Element {
                     class: "flex flex-row gap-2",
                     p {
                         class: "text-2xl md:text-3xl lg:text-4xl font-bold font-mono",
-                        "{sample_hash.cloned().to_string()[1..17]}"
+                        "{sample_hash.cloned()}"
                     }
                 }
             }
